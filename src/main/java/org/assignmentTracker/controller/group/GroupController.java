@@ -36,10 +36,12 @@ public class GroupController {
             return groupService.getAll();
         }
 
+    @GetMapping("/read/{integer}")
     public Group read(@RequestBody Integer integer){
             return groupService.read(integer);
     }
 
+    @PostMapping("/update")
     public Group update(@RequestBody Group group){
 
             return groupService.update(group);

@@ -15,7 +15,7 @@ import org.assignmentTracker.util.Helper;
 public class GroupFactory {
 
 
-    public static Group createGroup (String name, String lecture, String subject){
+    public static Group createGroup (String name, Lecture lecture, Subject subject){
 
         int groupID = Helper.generateID();
         Group group = new Group.Builder()

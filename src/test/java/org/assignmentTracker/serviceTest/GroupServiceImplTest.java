@@ -27,7 +27,7 @@ public class GroupServiceImplTest {
     @Autowired
     private static GroupService service ;
     private static Group group = GroupFactory.createGroup("Group 13",
-            "Arinze Anikwue","Application Development Practice");
+            null,null);
 
 
     @Test

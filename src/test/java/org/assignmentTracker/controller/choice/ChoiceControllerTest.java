@@ -45,10 +45,13 @@ public class ChoiceControllerTest {
     TestRestTemplate restTemplate;
     private String baseUrl = "http://localhost:8080/choice";
 
+    private static final String ADMIN_USERNAME = "lecturer";
+    private static final String ADMIN_PASSWORD = "lecturer-password";
+
     @Test
     public void a_create() {
         String url = baseUrl + "/create";
-        ResponseEntity<Choice> responseEntity = restTemplate.postForEntity(url, choice, Choice.class);
+        ResponseEntity<Choice> responseEntity = restTemplate.withBasicAuth(ADMIN_USERNAME,ADMIN_PASSWORD).postForEntity(url, choice, Choice.class);
         assertEquals(200, responseEntity.getStatusCodeValue());
         System.out.println("Post: "+ responseEntity.getBody().getId());
         System.out.println(responseEntity.toString());
@@ -57,7 +60,7 @@ public class ChoiceControllerTest {
     @Test
     public void c_read() {
         String url = baseUrl + "/read/" + 218556910; //copy id from the console output of c_getAll and paste here to test
-        ResponseEntity<Choice> responseEntity = restTemplate.getForEntity(url, Choice.class);
+        ResponseEntity<Choice> responseEntity = restTemplate.withBasicAuth(ADMIN_USERNAME,ADMIN_PASSWORD).getForEntity(url, Choice.class);
         assertEquals(218556910, responseEntity.getBody().getId());
         assertEquals(200, responseEntity.getStatusCodeValue());
         System.out.println(url.toString());
@@ -68,7 +71,7 @@ public class ChoiceControllerTest {
         String url = baseUrl + "/all";
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<Set> entity = new HttpEntity<>(null, headers);
-        ResponseEntity<Set> response = restTemplate.exchange(url, HttpMethod.GET, entity, Set.class);
+        ResponseEntity<Set> response = restTemplate.withBasicAuth(ADMIN_USERNAME,ADMIN_PASSWORD).exchange(url, HttpMethod.GET, entity, Set.class);
         assertEquals(200, response.getStatusCodeValue());
         System.out.println(response.getBody().toString()+"\n");
 

@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+/**
+ * AssignmentController.java
+ *
+ * @author Claude De-Tchambila
+ * student number: 217035027
+ */
 @RestController
 @RequestMapping("/assignment")
 public class AssignmentController {

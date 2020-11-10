@@ -20,6 +20,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -37,16 +39,20 @@ public class PollControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-    private Poll poll;
+    private static Poll poll;
     private String baseURL = "http://localhost:8080/poll";
     User user1 = UserFactory.createUser("Steve","Biko","blackconsciousness","BantuBiko@gmail.com");
 
+    //security impl
+
+    private static String userName = "Poll";
+    private static String password = "Password";
     @Test
     public void a_create() {
         
         Poll poll = PollFactory.createPoll(null,user1,null,"Yes");
         String url = baseURL + "create";
-        ResponseEntity<Poll> response = restTemplate.postForEntity(url,poll, Poll.class);
+        ResponseEntity<Poll> response = restTemplate.withBasicAuth(userName,password).postForEntity(url,poll, Poll.class);
         assertNotNull(response);
         assertNotNull(response.getBody());
         System.out.println(response);
@@ -60,17 +66,17 @@ public class PollControllerTest {
         String url = baseURL + "getAll";
         HttpHeaders headers = new HttpHeaders();
         HttpEntity <String> entity = new HttpEntity<>(null,headers);
-        ResponseEntity <String> responseEntity = restTemplate.exchange(url, HttpMethod.GET,entity, String.class);
+        ResponseEntity <String> responseEntity = restTemplate.withBasicAuth(userName,password).exchange(url, HttpMethod.GET,entity, String.class);
         System.out.println("Get all: "+ responseEntity.getBody());
 
     }
 
     @Test
     public void b_read(){
-        //Poll poll = new Poll();
+
         String url = baseURL + "read"+ poll.getId();
         System.out.println("URL"+url);
-        ResponseEntity <Poll> responseEntity = restTemplate.getForEntity(url,Poll.class);
+        ResponseEntity <Poll> responseEntity = restTemplate.withBasicAuth(userName,password).getForEntity(url,Poll.class);
         assertEquals(poll.getId(),responseEntity.getBody().getId());
 
 
@@ -78,12 +84,12 @@ public class PollControllerTest {
 
     @Test
     public void c_update(){
-      //  Poll poll = new Poll();
+
         Poll update = new Poll.Builder().copy(poll).setVotes("Yes").build();
         String url = baseURL + "update";
         System.out.println("URL:"+ url);
         System.out.println("Updated info:"+update);
-        ResponseEntity <Poll>  responseEntity = restTemplate.postForEntity(url,update,Poll.class);
+        ResponseEntity <Poll>  responseEntity = restTemplate.withBasicAuth(userName,password).postForEntity(url,update,Poll.class);
         assertEquals(poll.getId(), responseEntity.getBody().getId());
 
 
@@ -93,10 +99,10 @@ public class PollControllerTest {
     @Test
     public void e_delete(){
         
-        //Poll poll = new Poll();
+
         String url = baseURL + "delete"+ poll.getId();
         System.out.println("URL:"+ url);
-        restTemplate.delete(url);
+        restTemplate.withBasicAuth(userName,password).delete(url);
 
     }
 }

@@ -11,16 +11,14 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -32,6 +30,8 @@ public class AssignmentControllerTest {
     private TestRestTemplate restTemplate;
     private static Assignment assignment;
     private final String baseUrl = "http://localhost:8080/assignment";
+    private final static String SECURITY_USERNAME = "Byron";
+    private final static String SECURITY_PASSWORD = "password";
 
     @Test
     public void a_create() {
@@ -43,9 +43,12 @@ public class AssignmentControllerTest {
                 UserFactory.createUser("Martin", "Fowler", "123123", "martin@email.com")
         );
         String url = baseUrl + "/create";
-        ResponseEntity<Assignment> postResponse = restTemplate.postForEntity(url, newAssignment, Assignment.class);
+        ResponseEntity<Assignment> postResponse = restTemplate
+                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .postForEntity(url, newAssignment, Assignment.class);
 
         assertNotNull(postResponse.getBody());
+        assertEquals(HttpStatus.OK, postResponse.getStatusCode());
         assignment = postResponse.getBody();
 
         System.out.println("Create vote");
@@ -61,9 +64,12 @@ public class AssignmentControllerTest {
         int id = assignment.getId();
         String url = baseUrl + "/read/" + id;
 
-        ResponseEntity<Assignment> getResponse = restTemplate.getForEntity(url, Assignment.class);
+        ResponseEntity<Assignment> getResponse = restTemplate
+                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .getForEntity(url, Assignment.class);
 
         assertNotNull(getResponse.getBody());
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
 
         System.out.println("Read assignment");
         System.out.println(getResponse.getBody());
@@ -74,9 +80,21 @@ public class AssignmentControllerTest {
     public void c_update() {
         String url = baseUrl + "/update";
         String oldName = assignment.getName();
+
         assignment.setName("Deliverable 3");
 
-        assertNotEquals(assignment.getName(), oldName);
+        restTemplate.withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .put(url, assignment);
+
+        url = baseUrl + "/read/" + assignment.getId();
+
+        ResponseEntity<Assignment> response = restTemplate
+                .withBasicAuth("Robyn", "wordpasss")
+                .getForEntity(url, Assignment.class);
+
+        Assignment assignmentFromDb = response.getBody();
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        assertNotEquals(assignmentFromDb.getName(), oldName);
     }
 
     @Test
@@ -84,7 +102,11 @@ public class AssignmentControllerTest {
         String url = baseUrl + "/delete/" + assignment.getId();
         restTemplate.delete(url);
 
-        ResponseEntity<List> response = restTemplate.getForEntity(baseUrl + "/all", List.class);
+        ResponseEntity<List> response = restTemplate
+                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .getForEntity(baseUrl + "/all", List.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         System.out.println(response.getBody());
         System.out.println(response.getStatusCode());
@@ -95,7 +117,11 @@ public class AssignmentControllerTest {
         String url = baseUrl + "/all";
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .exchange(url, HttpMethod.GET, entity, String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
         System.out.println("Get all assignments");
         System.out.println(response.getBody());

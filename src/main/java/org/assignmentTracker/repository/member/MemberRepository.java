@@ -15,5 +15,5 @@ import java.util.Set;
 
 public interface MemberRepository extends JpaRepository<Member,Integer> {
 
-    Set<Member> getAll();
+//    Set<Member> getAll();
 }

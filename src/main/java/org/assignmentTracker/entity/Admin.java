@@ -2,6 +2,7 @@ package org.assignmentTracker.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /*
 @author Brandon Villet
@@ -15,6 +16,7 @@ public class Admin {
 
     @Id
     private  int id;
+    @OneToOne
     private  Assignment assignment;
     private  User user;
 

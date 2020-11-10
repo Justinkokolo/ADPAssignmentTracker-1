@@ -27,7 +27,7 @@ public class GroupFactoryTest {
 
         Subject subject = SubjectFactory.createSubject("Application Development Practice","ADP372S","DDD Part 2",new Date());
         //lecture factory entity has not yet been created
-        Group group = new GroupFactory().createGroup("Group 13",null,"ADP3");
+        Group group = new GroupFactory().createGroup("Group 13",null,null);
 
         Assert.assertEquals(group.getName(),null);
 

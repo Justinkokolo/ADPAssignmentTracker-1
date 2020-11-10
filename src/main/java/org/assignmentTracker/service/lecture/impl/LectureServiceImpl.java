@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -29,12 +30,12 @@ public class LectureServiceImpl implements ILectureService {
 
     @Override
     public Set<Lecture> getAll() {
-        return this.repository.getAll();
+        return this.repository.findAll().stream().collect(Collectors.toSet());
     }
 
     @Override
     public Set<Lecture> getAllNamesThatStartWithK() {
-        Set<Lecture> lectures =getAll();
+        Set<Lecture> lectures = repository.findAll().stream().collect(Collectors.toSet());
         Set<Lecture> LecturesWithK = new HashSet<>();
         for(Lecture lecture : lectures){
 
