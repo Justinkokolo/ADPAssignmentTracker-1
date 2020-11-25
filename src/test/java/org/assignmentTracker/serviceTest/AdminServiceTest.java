@@ -16,7 +16,7 @@ import static org.assignmentTracker.factory.UserFactory.createUser;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AdminServiceTest {
 
-    private static IAdminService service = AdminService.getService();
+    private static IAdminService service ;
     private static User user1 = createUser("Brandon", "Villet", "pass", "villetbrandon@gmail.com");
     private static User user2 = UserFactory.createUser("Byron", "Cloete", "wordpass", "byroncloete7@gmail.com");
     private static Admin admin1 = AdminFactory.createAdmin(user1, null);

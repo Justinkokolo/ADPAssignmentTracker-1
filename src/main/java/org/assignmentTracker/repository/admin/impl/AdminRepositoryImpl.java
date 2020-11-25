@@ -1,16 +1,16 @@
-package org.assignmentTracker.repository.admin.impl;
+/*package org.assignmentTracker.repository.admin.impl;
 
 import org.assignmentTracker.entity.Admin;
 import org.assignmentTracker.repository.admin.IAdminRepository;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
+
  * @author Brandon Villet
  * student number: 214056791
  * Desc: Interface for admin repository
  * Date: 30 August 2020
- */
+
 
 public class AdminRepositoryImpl implements IAdminRepository {
     private static AdminRepositoryImpl repository = null;
@@ -64,3 +64,4 @@ public class AdminRepositoryImpl implements IAdminRepository {
         }
         return false;
     }}
+*/

@@ -1,5 +1,6 @@
 package org.assignmentTracker.service.vote.impl;
 
+import org.assignmentTracker.entity.Assignment;
 import org.assignmentTracker.entity.Vote;
 import org.assignmentTracker.repository.vote.IVoteRepository;
 import org.assignmentTracker.service.vote.IVoteService;
@@ -26,6 +27,13 @@ public class VoteService implements IVoteService {
     @Override
     public Set<Vote> getAll() {
         return repository.findAll().stream().collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Vote> getVoteByUsername(String username) {
+        Set<Vote> voteSet = getAll();
+        voteSet.removeIf(vote -> !vote.getVoter().getName().equals(username));
+        return voteSet;
     }
 
     @Override

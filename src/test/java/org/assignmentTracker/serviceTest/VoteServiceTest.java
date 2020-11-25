@@ -48,8 +48,13 @@ public class VoteServiceTest extends TestCase {
         System.out.println("Updated: " + voteUpdate);
     }
 
-    public void test_e_Delete() {
+    public void test_z_Delete() {
         boolean isVoteDeleted = service.delete(vote.getId());
         Assert.assertTrue(isVoteDeleted);
+    }
+
+    public void test_e_getVoteByUsername() {
+        Set<Vote> votes = service.getVoteByUsername("Karen");
+        Assert.assertTrue(votes.size() > 0);
     }
 }

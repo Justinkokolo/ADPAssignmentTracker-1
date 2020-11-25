@@ -113,7 +113,7 @@ fabric.properties
 .idea/codestream.xml
 
 /target
-/src/main/resources/application.properties
+#/src/main/resources/application.properties
 
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij

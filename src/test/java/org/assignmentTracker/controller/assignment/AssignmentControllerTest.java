@@ -14,6 +14,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -35,28 +37,33 @@ public class AssignmentControllerTest {
 
     @Test
     public void a_create() {
-        Assignment newAssignment = AssignmentFactory.createAssignment("Project Deliverable 3",
-                SubjectFactory.createSubject("Project 3", "PRT362S", "Rothman", new Date()),
-                new Date(),
-                null,
-                null,
-                UserFactory.createUser("Martin", "Fowler", "123123", "martin@email.com")
-        );
-        String url = baseUrl + "/create";
-        ResponseEntity<Assignment> postResponse = restTemplate
-                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
-                .postForEntity(url, newAssignment, Assignment.class);
+        try {
+            Date date = new SimpleDateFormat("dd,MM,yyyy").parse("11/06/2020");
+            Assignment newAssignment = AssignmentFactory.createAssignment("Project Deliverable 3",
+                    SubjectFactory.createSubject("Project 3", "PRT362S", "Rothman", new Date(9999900)),
+                    date,
+                    null,
+                    null,
+                    UserFactory.createUser("Martin", "Fowler", "123123", "martin@email.com")
+            );
+            String url = baseUrl + "/create";
+            ResponseEntity<Assignment> postResponse = restTemplate
+                    .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                    .postForEntity(url, newAssignment, Assignment.class);
 
-        assertNotNull(postResponse.getBody());
-        assertEquals(HttpStatus.OK, postResponse.getStatusCode());
-        assignment = postResponse.getBody();
+            assertNotNull(postResponse.getBody());
+            assertEquals(HttpStatus.OK, postResponse.getStatusCode());
+            assignment = postResponse.getBody();
 
-        System.out.println("Create vote");
+            System.out.println("Create vote");
 
-        System.out.println("Response body");
-        System.out.println(postResponse.getBody());
-        System.out.println("Response status code");
-        System.out.println(postResponse.getStatusCodeValue());
+            System.out.println("Response body");
+            System.out.println(postResponse.getBody());
+            System.out.println("Response status code");
+            System.out.println(postResponse.getStatusCodeValue());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -98,7 +105,7 @@ public class AssignmentControllerTest {
     }
 
     @Test
-    public void e_delete() {
+    public void z_delete() {
         String url = baseUrl + "/delete/" + assignment.getId();
         restTemplate.delete(url);
 
@@ -126,4 +133,53 @@ public class AssignmentControllerTest {
         System.out.println("Get all assignments");
         System.out.println(response.getBody());
     }
+
+    @Test
+    public void d_getAllByDate() {
+        String url = baseUrl + "/all/date";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("dateString", "11/06/2020");
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .exchange(url, HttpMethod.GET, entity, String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        System.out.println("Get all assignments by date assigned");
+        System.out.println(response.getBody());
+    }
+
+    @Test
+    public void e_getAllBySubjectName() {
+        String url = baseUrl + "/all/subject";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("subjectName", "Project 3");
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .exchange(url, HttpMethod.GET, entity, String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        System.out.println("Get all assignments by subject name");
+        System.out.println(response.getBody());
+    }
+
+    @Test
+    public void f_getAllByAssignmentName() {
+        String url = baseUrl + "/all/name";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("assignmentName", "Project");
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .exchange(url, HttpMethod.GET, entity, String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        System.out.println("Get all assignments by assignment name");
+        System.out.println(response.getBody());
+    }
+
 }

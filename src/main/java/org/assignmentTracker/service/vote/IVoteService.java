@@ -14,4 +14,5 @@ import java.util.Set;
  */
 public interface IVoteService extends IService<Vote, Integer> {
     Set<Vote> getAll();
+    Set<Vote> getVoteByUsername(String username);
 }

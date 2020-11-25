@@ -1,11 +1,13 @@
 package org.assignmentTracker.service.assignment.impl;
 
 import org.assignmentTracker.entity.Assignment;
+import org.assignmentTracker.entity.Subject;
 import org.assignmentTracker.repository.assignment.IAssignmentRepository;
 import org.assignmentTracker.service.assignment.IAssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,27 @@ public class AssignmentService implements IAssignmentService {
     @Override
     public Set<Assignment> getAll() {
         return repository.findAll().stream().collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Assignment> getAssignmentsByDate(Date date) {
+        Set<Assignment> assignmentSet = getAll();
+        assignmentSet.removeIf(assignment -> !assignment.getDateAssigned().equals(date));
+        return assignmentSet;
+    }
+
+    @Override
+    public Set<Assignment> getAssignmentsBySubject(String subject) {
+        Set<Assignment> assignmentSet = getAll();
+        assignmentSet.removeIf(assignment -> !assignment.getSubject().getName().equals(subject));
+        return assignmentSet;
+    }
+
+    @Override
+    public Set<Assignment> getAssignmentsContainName(String name) {
+        Set<Assignment> assignmentSet = getAll();
+        assignmentSet.removeIf(assignment -> !assignment.getName().contains(name));
+        return assignmentSet;
     }
 
     @Override

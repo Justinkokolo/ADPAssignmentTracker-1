@@ -48,4 +48,9 @@ public class VoteController {
         return voteService.getAll();
     }
 
+    @GetMapping("/all/username")
+    public Set<Vote> getAllByUsername(@RequestHeader String username) {
+        return voteService.getVoteByUsername(username);
+    }
+
 }

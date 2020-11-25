@@ -84,7 +84,7 @@ public class VoteControllerTest {
     }
 
     @Test
-    public void e_delete() {
+    public void z_delete() {
         String url = baseUrl + "/delete/" + vote.getId();
         restTemplate.delete(url);
 
@@ -108,6 +108,21 @@ public class VoteControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         System.out.println("Get all votes");
+        System.out.println(response.getBody());
+    }
+
+    @Test
+    public void e_getAll() {
+        String url = baseUrl + "/all/username";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("username", "Melody");
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate.withBasicAuth(SECURITY_USERNAME, SECURITY_PASSWORD)
+                .exchange(url, HttpMethod.GET, entity, String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        System.out.println("Get all votes by username");
         System.out.println(response.getBody());
     }
 }
