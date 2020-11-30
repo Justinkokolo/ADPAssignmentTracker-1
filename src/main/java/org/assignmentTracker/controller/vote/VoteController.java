@@ -1,7 +1,10 @@
 package org.assignmentTracker.controller.vote;
 
+import org.assignmentTracker.Dto.VoteCreateDto;
+import org.assignmentTracker.entity.User;
 import org.assignmentTracker.entity.Vote;
 import org.assignmentTracker.factory.VoteFactory;
+import org.assignmentTracker.service.user.impl.UserService;
 import org.assignmentTracker.service.vote.impl.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +24,13 @@ public class VoteController {
     @Autowired
     private VoteService voteService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/create")
-    public Vote create(@RequestBody Vote vote) {
-        Vote newVote = VoteFactory.createVote(vote.getVoter());
+    public Vote create(@RequestBody VoteCreateDto vote) {
+        User user = userService.read(vote.getVoter());
+        Vote newVote = VoteFactory.createVote(user);
 
         return voteService.create(newVote);
     }

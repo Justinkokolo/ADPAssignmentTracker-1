@@ -2,7 +2,6 @@ package org.assignmentTracker.serviceTest;
 
 import junit.framework.TestCase;
 import org.assignmentTracker.entity.Assignment;
-import org.assignmentTracker.entity.Subject;
 import org.assignmentTracker.entity.User;
 import org.assignmentTracker.factory.AssignmentFactory;
 import org.assignmentTracker.factory.SubjectFactory;

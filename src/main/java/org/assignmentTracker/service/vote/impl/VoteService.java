@@ -32,7 +32,7 @@ public class VoteService implements IVoteService {
     @Override
     public Set<Vote> getVoteByUsername(String username) {
         Set<Vote> voteSet = getAll();
-        voteSet.removeIf(vote -> !vote.getVoter().getName().equals(username));
+        voteSet.removeIf(vote -> !vote.getVoter().getName().equalsIgnoreCase(username));
         return voteSet;
     }
 
