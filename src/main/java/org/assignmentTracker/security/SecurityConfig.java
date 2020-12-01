@@ -17,10 +17,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String USER_ROLE = "USER";
     private static final String ADMIN_ROLE = "ADMIN";
 
+    private static final String[] AUTH_LIST = { //
+            "/v2/api-docs", //
+            "/configuration/ui", //
+            "/swagger-resources", //
+            "/configuration/security", //
+            "/swagger-ui.html", //
+            "/webjars/**" //
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("Byron")
+                .withUser("Justin")
                 .password(encoder().encode("password"))
                 .roles(ADMIN_ROLE, USER_ROLE)
                 .and()
@@ -31,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.authorizeRequests().antMatchers(AUTH_LIST).authenticated().and().httpBasic();
         http.httpBasic()
                 .and()
                 .authorizeRequests()
@@ -52,12 +63,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/assignmenttrackerdb/**/create", "/assignmenttrackerdb/**/delete/**").hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.GET, "/assignmenttrackerdb/**/read/**", "/assignmenttrackerdb/**/all").hasRole(USER_ROLE)
-                .antMatchers(HttpMethod.POST, "/Lecture/**").hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.DELETE, "/Lecture/delete/**").hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.GET, "/Lecture/read/**", "/Lecture/all/").hasRole(USER_ROLE)
-                .antMatchers(HttpMethod.POST, "/Member/**").hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.DELETE, "/Member/delete/**").hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.GET, "/Member/read/**", "/Member/all/").hasRole(USER_ROLE)
+                .antMatchers(HttpMethod.POST, "/lecture/**").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.DELETE, "/lecture/delete/**").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.GET, "/lecture/read/**", "/lecture/all/").hasRole(USER_ROLE)
+                .antMatchers(HttpMethod.POST, "/member/**").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.DELETE, "/member/delete/**").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.GET, "/member/read/**", "/member/all/").hasRole(USER_ROLE)
 
                 .antMatchers(HttpMethod.GET, "/choice/read/").hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.GET, "/choice/all").hasRole(ADMIN_ROLE)
@@ -75,6 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/subject/delete/**").hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.DELETE, "/note/delete/**").hasRole(USER_ROLE)
 
+
+
                 .and()
                 .csrf().disable()
                 .formLogin().disable();
@@ -84,4 +97,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder encoder(){
         return new BCryptPasswordEncoder();
     }
+
+
 }
